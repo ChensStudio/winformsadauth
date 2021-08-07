@@ -55,7 +55,9 @@ namespace azure_sql
             SC.SqlConnection sqlConnection = new SC.SqlConnection(builder.ConnectionString);
 
             SC.SqlCommand cmd = new SC.SqlCommand(
-                "SELECT '******** MY QUERY RAN SUCCESSFULLY!! ********';",
+                "select Name, ListPrice, Weight "
+                            + "from [SalesLT].[Product] "
+                            + "where ProductID = 680;",
                 sqlConnection);
 
             try
