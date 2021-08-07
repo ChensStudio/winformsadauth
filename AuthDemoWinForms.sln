@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.28803.697
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthDemoWinForms", "AuthDemoWinForms\AuthDemoWinForms.csproj", "{9BC668B7-B893-46B5-B3FF-26653B249FE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "azure-sql", "azure-sql\azure-sql.csproj", "{ADD647A8-74F1-4F45-BA6F-3438739157E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9BC668B7-B893-46B5-B3FF-26653B249FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BC668B7-B893-46B5-B3FF-26653B249FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BC668B7-B893-46B5-B3FF-26653B249FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADD647A8-74F1-4F45-BA6F-3438739157E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADD647A8-74F1-4F45-BA6F-3438739157E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADD647A8-74F1-4F45-BA6F-3438739157E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADD647A8-74F1-4F45-BA6F-3438739157E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
