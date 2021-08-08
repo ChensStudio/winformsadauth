@@ -117,7 +117,7 @@ namespace AuthDemoWinForms
                 return;
             }
 
-            int productID;
+            int productID=0;
 
             try
             {
@@ -125,7 +125,8 @@ namespace AuthDemoWinForms
             }
             catch (FormatException ex)
             {
-                throw ex;
+                MessageBox.Show("Please input correct format of ProductID");
+                return;
             }
 
             // User ID is optional for .NET Core and .NET Standard.
