@@ -35,6 +35,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnGetData = new System.Windows.Forms.Button();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtProductID = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // label1
@@ -86,15 +88,15 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(26, 176);
+            this.textBox1.Location = new System.Drawing.Point(26, 161);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(564, 140);
+            this.textBox1.Size = new System.Drawing.Size(564, 122);
             this.textBox1.TabIndex = 6;
             // 
             // btnGetData
             // 
-            this.btnGetData.Location = new System.Drawing.Point(26, 348);
+            this.btnGetData.Location = new System.Drawing.Point(26, 355);
             this.btnGetData.Name = "btnGetData";
             this.btnGetData.Size = new System.Drawing.Size(129, 23);
             this.btnGetData.TabIndex = 7;
@@ -102,11 +104,29 @@
             this.btnGetData.UseVisualStyleBackColor = true;
             this.btnGetData.Click += new System.EventHandler(this.btnGetData_Click);
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(23, 319);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(259, 13);
+            this.label3.TabIndex = 8;
+            this.label3.Text = "Product ID: (Input any number between 706 and 800)";
+            // 
+            // txtProductID
+            // 
+            this.txtProductID.Location = new System.Drawing.Point(288, 316);
+            this.txtProductID.Name = "txtProductID";
+            this.txtProductID.Size = new System.Drawing.Size(237, 20);
+            this.txtProductID.TabIndex = 9;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(615, 403);
+            this.Controls.Add(this.txtProductID);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.btnGetData);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label5);
@@ -130,6 +150,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Button btnGetData;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtProductID;
     }
 }
 

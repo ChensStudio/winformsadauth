@@ -117,15 +117,26 @@ namespace AuthDemoWinForms
                 return;
             }
 
+            int productID;
+
+            try
+            {
+                productID = Int32.Parse(txtProductID.Text);
+            }
+            catch (FormatException ex)
+            {
+                throw ex;
+            }
+
             // User ID is optional for .NET Core and .NET Standard.
             //string ConnectionString = @"Server=tcp:mf-west-us-svr1.database.windows.net,1433;Initial Catalog=model-force-dev;Persist Security Info=False;MultipleActiveResultSets=False;
             //                                    Encrypt=True;TrustServerCertificate=False;Authentication=Active Directory Interactive;";
- 
+
 
             // Provide the query string with a parameter placeholder.
-            string queryString = "select Name, ListPrice, Weight "
+            string queryString = String.Format("select Name, ListPrice, Weight "
                             + "from [SalesLT].[Product] "
-                            + "where ProductID = 680";
+                            + "where ProductID = {0}", productID.ToString());
 
 
             SC.SqlConnectionStringBuilder builder = new SC.SqlConnectionStringBuilder();
