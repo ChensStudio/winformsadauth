@@ -10,7 +10,6 @@ using SC = System.Data.SqlClient;
 using TT = System.Threading.Tasks;
 using AD = Microsoft.IdentityModel.Clients.ActiveDirectory;
 
-
 namespace AuthDemoWinForms
 {
     public partial class Form1 : Form
@@ -160,14 +159,11 @@ namespace AuthDemoWinForms
             // Create and open the connection in a using block. This
             // ensures that all resources will be closed and disposed
             // when the code exits.
-            using (SqlConnection connection =
-                new SqlConnection(builder.ConnectionString))
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
             {
                 var provider = new ActiveDirectoryAuthProvider();
 
-                SC.SqlAuthenticationProvider.SetProvider(
-                    SC.SqlAuthenticationMethod.ActiveDirectoryInteractive
-                    ,provider);
+                SC.SqlAuthenticationProvider.SetProvider(SC.SqlAuthenticationMethod.ActiveDirectoryInteractive, provider);
 
                 // Create the Command and Parameter objects.
                 SqlCommand command = new SqlCommand(queryString, connection);
@@ -204,27 +200,35 @@ namespace AuthDemoWinForms
         private readonly string _clientId = ClientApplicationID;
         private readonly Uri _redirectUri = RedirectUri;
 
-        public override async TT.Task<SC.SqlAuthenticationToken>
-            AcquireTokenAsync(SC.SqlAuthenticationParameters parameters)
+        public override async TT.Task<SC.SqlAuthenticationToken> AcquireTokenAsync(SC.SqlAuthenticationParameters parameters)
         {
-            AD.AuthenticationContext authContext =
-                new AD.AuthenticationContext(parameters.Authority);
+            AD.AuthenticationContext authContext = new AD.AuthenticationContext(parameters.Authority);
             authContext.CorrelationId = parameters.ConnectionId;
-            AD.AuthenticationResult result;
+            AD.AuthenticationResult result = null;
 
             switch (parameters.AuthenticationMethod)
             {
                 case SC.SqlAuthenticationMethod.ActiveDirectoryInteractive:
                     Console.WriteLine("In method 'AcquireTokenAsync', case_0 == '.ActiveDirectoryInteractive'.");
 
-                    result = await authContext.AcquireTokenAsync(
-                        parameters.Resource,  // "https://database.windows.net/"
-                        _clientId,
-                        _redirectUri,
-                        new AD.PlatformParameters(AD.PromptBehavior.Auto),
-                        new AD.UserIdentifier(
-                            parameters.UserId,
-                            AD.UserIdentifierType.RequiredDisplayableId));
+                    try
+                    {
+                        result = await authContext.AcquireTokenSilentAsync(parameters.Resource, _clientId);
+                    }
+                    catch (AD.AdalException adalException)
+                    {
+                        if (adalException.ErrorCode == AD.AdalError.FailedToAcquireTokenSilently || adalException.ErrorCode == AD.AdalError.InteractionRequired)
+                        {
+                            result = await authContext.AcquireTokenAsync(
+                                parameters.Resource,  // "https://database.windows.net/"
+                                _clientId,
+                                _redirectUri,
+                                new AD.PlatformParameters(AD.PromptBehavior.Auto),
+                                new AD.UserIdentifier(
+                                    parameters.UserId,
+                                    AD.UserIdentifierType.RequiredDisplayableId));
+                        }
+                    }
                     break;
 
                 //case SC.SqlAuthenticationMethod.ActiveDirectoryIntegrated:
