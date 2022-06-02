@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using SC = System.Data.SqlClient;
-using TT = System.Threading.Tasks;
-using AD = Microsoft.IdentityModel.Clients.ActiveDirectory;
+
 
 
 namespace AuthDemoWinForms
@@ -143,9 +142,11 @@ namespace AuthDemoWinForms
             SC.SqlConnectionStringBuilder builder = new SC.SqlConnectionStringBuilder();
 
             // Program._  static values that you set earlier.
-            builder["Data Source"] = "tcp:mf-west-us-svr1.database.windows.net,1433";
-            builder.UserID = label4.Text;
-            builder["Initial Catalog"] = "model-force-dev";
+            //builder["Data Source"] = "tcp:mf-west-us-svr1.database.windows.net,1433";
+            //builder.UserID = label4.Text;
+            //builder["Initial Catalog"] = "model-force-dev";
+            builder["Database"] = "model-force-dev";
+            builder["Server"] = "mf-west-us-svr1.database.windows.net,1433";
 
             // This "Password" is not used with .ActiveDirectoryInteractive.
             //builder["Password"] = "<YOUR PASSWORD HERE>";
@@ -154,20 +155,23 @@ namespace AuthDemoWinForms
             builder["TrustServerCertificate"] = true;
             builder.Pooling = false;
 
+            string ConnectionString1 = @"Server=mf-west-us-svr1.database.windows.net,1433; Authentication=Active Directory Interactive; Database=model-force-dev;User Id=ychen@chenyangyinpengmsn.onmicrosoft.com";
+
+
             // Assigned enum value must match the enum given to .SetProvider().
-            builder.Authentication = SC.SqlAuthenticationMethod.ActiveDirectoryInteractive;
+            //builder.Authentication = SC.SqlAuthenticationMethod.ActiveDirectoryInteractive;
 
             // Create and open the connection in a using block. This
             // ensures that all resources will be closed and disposed
             // when the code exits.
             using (SqlConnection connection =
-                new SqlConnection(builder.ConnectionString))
+                new SqlConnection(ConnectionString1))
             {
                 var provider = new ActiveDirectoryAuthProvider();
 
                 SC.SqlAuthenticationProvider.SetProvider(
                     SC.SqlAuthenticationMethod.ActiveDirectoryInteractive
-                    ,provider);
+                    , provider);
 
                 // Create the Command and Parameter objects.
                 SqlCommand command = new SqlCommand(queryString, connection);
@@ -194,69 +198,4 @@ namespace AuthDemoWinForms
             }
         }
     }
-
-    public class ActiveDirectoryAuthProvider : SC.SqlAuthenticationProvider
-    {
-        static public readonly string ClientApplicationID = "acbdaf98-6949-45dc-bfc4-4de781e1317f";
-        static public readonly Uri RedirectUri = new Uri("https://login.microsoftonline.com/common/oauth2/nativeclient");
-
-        // Program._ more static values that you set!
-        private readonly string _clientId = ClientApplicationID;
-        private readonly Uri _redirectUri = RedirectUri;
-
-        public override async TT.Task<SC.SqlAuthenticationToken>
-            AcquireTokenAsync(SC.SqlAuthenticationParameters parameters)
-        {
-            AD.AuthenticationContext authContext =
-                new AD.AuthenticationContext(parameters.Authority);
-            authContext.CorrelationId = parameters.ConnectionId;
-            AD.AuthenticationResult result;
-
-            switch (parameters.AuthenticationMethod)
-            {
-                case SC.SqlAuthenticationMethod.ActiveDirectoryInteractive:
-                    Console.WriteLine("In method 'AcquireTokenAsync', case_0 == '.ActiveDirectoryInteractive'.");
-
-                    result = await authContext.AcquireTokenAsync(
-                        parameters.Resource,  // "https://database.windows.net/"
-                        _clientId,
-                        _redirectUri,
-                        new AD.PlatformParameters(AD.PromptBehavior.Auto),
-                        new AD.UserIdentifier(
-                            parameters.UserId,
-                            AD.UserIdentifierType.RequiredDisplayableId));
-                    break;
-
-                //case SC.SqlAuthenticationMethod.ActiveDirectoryIntegrated:
-                //    Console.WriteLine("In method 'AcquireTokenAsync', case_1 == '.ActiveDirectoryIntegrated'.");
-
-                //    result = await authContext.AcquireTokenAsync(
-                //        parameters.Resource,
-                //        _clientId,
-                //        new AD.UserCredential());
-                //    break;
-
-                //case SC.SqlAuthenticationMethod.ActiveDirectoryPassword:
-                //    Console.WriteLine("In method 'AcquireTokenAsync', case_2 == '.ActiveDirectoryPassword'.");
-
-                //    result = await authContext.AcquireTokenAsync(
-                //        parameters.Resource,
-                //        _clientId,
-                //        new AD.UserPasswordCredential(
-                //            parameters.UserId,
-                //            parameters.Password));
-                //    break;
-
-                default: throw new InvalidOperationException();
-            }
-            return new SC.SqlAuthenticationToken(result.AccessToken, result.ExpiresOn);
-        }
-
-        public override bool IsSupported(SC.SqlAuthenticationMethod authenticationMethod)
-        {
-            return authenticationMethod == SC.SqlAuthenticationMethod.ActiveDirectoryIntegrated
-                || authenticationMethod == SC.SqlAuthenticationMethod.ActiveDirectoryInteractive
-                || authenticationMethod == SC.SqlAuthenticationMethod.ActiveDirectoryPassword;
-        }
-    } // EOClass ActiveDirectoryAuthProvider.
 }
