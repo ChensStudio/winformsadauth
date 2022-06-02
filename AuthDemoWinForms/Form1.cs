@@ -20,6 +20,13 @@ namespace AuthDemoWinForms
         public Form1()
         {
             InitializeComponent();
+
+
+            var provider = new ActiveDirectoryAuthProvider();
+
+            SC.SqlAuthenticationProvider.SetProvider(
+                SC.SqlAuthenticationMethod.ActiveDirectoryInteractive
+                , provider);
         }
 
         private string GetCurrentPrincipal()
@@ -167,11 +174,7 @@ namespace AuthDemoWinForms
             using (SqlConnection connection =
                 new SqlConnection(ConnectionString1))
             {
-                var provider = new ActiveDirectoryAuthProvider();
-
-                SC.SqlAuthenticationProvider.SetProvider(
-                    SC.SqlAuthenticationMethod.ActiveDirectoryInteractive
-                    , provider);
+                
 
                 // Create the Command and Parameter objects.
                 SqlCommand command = new SqlCommand(queryString, connection);
